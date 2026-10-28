@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive outlier detection lab with box plots, IQR fences, and CSV upload.">
+  <title>SPECTRA — Outlier Detection Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="rail" aria-label="Application navigation">
+      <a class="brand-mark" href="#top" aria-label="Spectra home"><span>✳</span></a>
+      <div class="rail-line"></div>
+      <a class="rail-icon active" href="#analysis" aria-label="Analysis" title="Analysis"><span>◫</span></a>
+      <a class="rail-icon" href="#outlier-table" aria-label="Outlier table" title="Outlier table"><span>⌗</span></a>
+      <a class="rail-icon" href="#method" aria-label="Method" title="Method"><span>ⓘ</span></a>
+      <div class="rail-spacer"></div>
+      <div class="rail-avatar" title="Task 28">28</div>
+    </aside>
+
+    <main id="top" class="main-content">
+      <header class="topbar">
+        <div class="brand-lockup"><span class="brand-word">SPECTRA</span><span class="brand-divider">/</span><span class="brand-subtitle">DATA QUALITY LAB</span></div>
+        <div class="topbar-right"><span class="live-dot"></span><span>LOCAL SESSION</span><span class="topbar-tag">TASK 28</span></div>
+      </header>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> OUTLIER DETECTION <span class="eyebrow-muted">· EXPERIMENT 028</span></div>
+          <h1>Find the signal<br>in the <span>noise.</span></h1>
+          <p class="hero-description">Explore numeric distributions, spot values beyond the expected range, and inspect every flagged record before making a decision.</p>
+          <div class="hero-foot"><span class="mini-icon">↗</span> IQR METHOD <span class="foot-separator">/</span> TUKEY BOX PLOT <span class="foot-separator">/</span> CSV READY</div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+          <div class="art-axis axis-vertical"></div><div class="art-axis axis-horizontal"></div>
+          <div class="art-boxplot"><div class="art-whisker top"></div><div class="art-cap top"></div><div class="art-box"><div class="art-median"></div></div><div class="art-whisker bottom"></div><div class="art-cap bottom"></div><i class="dot dot-one"></i><i class="dot dot-two"></i><i class="dot dot-three"></i></div>
+          <div class="art-label label-top">Q3 <span>75%</span></div><div class="art-label label-bottom">Q1 <span>25%</span></div><div class="art-caption">DISTRIBUTION / 01</div>
+        </div>
+      </section>
+
+      <section class="control-panel" aria-label="Dataset controls">
+        <div class="control-heading"><span class="control-number">01</span><div><h2>Choose your data</h2><p>Start with a sample or import your own CSV.</p></div></div>
+        <div class="controls">
+          <label class="field-group"><span class="field-label">DATA SOURCE</span><select id="dataset-select" class="field-control"><option value="employee">Employee salary dataset</option><option value="housing">Housing dataset</option></select></label>
+          <label class="field-group"><span class="field-label">NUMERIC VARIABLE</span><select id="column-select" class="field-control" aria-label="Numeric variable"></select></label>
+          <label class="upload-button" for="csv-upload"><span class="upload-icon">↑</span><span><strong>Upload CSV</strong><small>Choose a local file</small></span><input id="csv-upload" type="file" accept=".csv,text/csv"></label>
+        </div>
+        <div class="data-status"><span class="status-check">✓</span><span id="data-status-text">Sample data loaded. Choose a numeric variable to inspect its distribution.</span><span class="file-chip" id="file-chip">employee_salary.csv</span></div>
+      </section>
+
+      <section id="analysis" class="metrics-section" aria-label="Analysis summary">
+        <div class="section-heading"><div><span class="section-index">02 / LIVE SUMMARY</span><h2>At a glance</h2></div><span class="method-chip">1.5 × IQR FENCES</span></div>
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-top"><span>RECORDS CHECKED</span><span class="metric-glyph">▦</span></div><div id="metric-rows" class="metric-value">—</div><div class="metric-note">Rows in current dataset</div></article>
+          <article class="metric-card metric-accent"><div class="metric-top"><span>POTENTIAL OUTLIERS</span><span class="metric-glyph">↗</span></div><div id="metric-outliers" class="metric-value">—</div><div id="metric-outlier-note" class="metric-note">Values beyond the whiskers</div></article>
+          <article class="metric-card"><div class="metric-top"><span>MEDIAN</span><span class="metric-glyph">━</span></div><div id="metric-median" class="metric-value compact">—</div><div class="metric-note">50th percentile</div></article>
+          <article class="metric-card"><div class="metric-top"><span>INTERQUARTILE RANGE</span><span class="metric-glyph">↔</span></div><div id="metric-iqr" class="metric-value compact">—</div><div class="metric-note">Q3 minus Q1</div></article>
+        </div>
+      </section>
+
+      <section class="analysis-grid">
+        <article class="panel plot-panel">
+          <div class="panel-heading"><div><span class="section-index">VISUAL / 01</span><h2>Distribution map</h2></div><span class="panel-menu">BOX PLOT <b>⌄</b></span></div>
+          <p class="panel-subtitle">The box spans the middle 50% of values. Points beyond the whiskers are flagged for review.</p>
+          <div class="plot-wrap"><canvas id="boxplot-canvas" aria-label="Box plot for selected numeric variable" role="img"></canvas><div id="plot-empty" class="plot-empty" hidden>No numeric values available for this column.</div></div>
+          <div class="plot-legend"><span><i class="legend-box"></i> IQR (Q1–Q3)</span><span><i class="legend-median"></i> Median</span><span><i class="legend-outlier"></i> Potential outlier</span></div>
+        </article>
+        <article id="method" class="panel findings-panel">
+          <div class="panel-heading"><div><span class="section-index">INTERPRETATION / 02</span><h2>What stands out</h2></div><span class="findings-symbol">✳</span></div>
+          <div id="finding-main" class="finding-main"><span class="finding-pulse"></span><div><strong>Waiting for data</strong><p>Load a dataset to generate a finding.</p></div></div>
+          <div class="fence-list"><div class="fence-row"><span>LOWER FENCE</span><strong id="lower-fence">—</strong></div><div class="fence-row"><span>UPPER FENCE</span><strong id="upper-fence">—</strong></div><div class="fence-row"><span>WHISKER RANGE</span><strong id="whisker-range">—</strong></div></div>
+          <div class="method-note"><span class="note-icon">i</span><p>Outliers are <b>signals to investigate</b>, not automatic errors. Check the source, units, and context before excluding any record.</p></div>
+        </article>
+      </section>
+
+      <section id="outlier-table" class="panel table-panel">
+        <div class="panel-heading table-heading"><div><span class="section-index">03 / RECORD REVIEW</span><h2>Flagged records <span id="table-count" class="count-pill">0</span></h2></div><span class="panel-menu">REQUIRES HUMAN REVIEW</span></div>
+        <p class="panel-subtitle">Every record shown below sits outside the 1.5 × IQR fence for the chosen variable.</p>
+        <div class="table-scroll"><table><thead><tr><th>ROW</th><th>RECORD / IDENTIFIER</th><th id="table-variable-heading">VALUE</th><th>FLAG</th><th>RECOMMENDED NEXT STEP</th></tr></thead><tbody id="outlier-tbody"><tr><td colspan="5" class="empty-cell">Load a dataset to view flagged records.</td></tr></tbody></table></div>
+        <div class="table-footer"><span id="table-footer-note">No dataset analyzed yet.</span><span class="footer-rule">SPECTRA <b>·</b> TASK 28</span></div>
+      </section>
+
+      <footer class="footer"><span><b>SPECTRA</b> / OUTLIER DETECTION LAB</span><span>BUILT WITH PYTHON · PANDAS · MATPLOTLIB</span><span>ANALYZE RESPONSIBLY ↗</span></footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
